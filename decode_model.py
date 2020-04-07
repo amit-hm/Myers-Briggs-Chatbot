@@ -136,18 +136,30 @@ class decode_model(persona):
 		with open(path.join(self.params.data_folder,self.params.dictPath),'r') as doc:
 			for line in doc:
 				self.voc_decode[len(self.voc_decode)] = line.strip()
+				
+	def ReadSpeakerDictcode(self);
+		self.speakerVoc_decode = dict()
+		with open(path.join(self.params.data_folder,self.params.speakerDictPath),'r') as doc:
+			for line in doc:
+				self.speakerVoc_decode[len(self.speakerVoc_decode)] = line.strip()
 		
 
 	def id2word(self, ids):
 		### For raw-word data:
 		# self.voc_decode[len(self.voc_decode)] = '[unknown]'
 		tokens = []
+		j = 0
 		for i in ids:
-			try:
-				word = self.voc_decode[int(i)-self.params.special_word]
+			if j = 0:
+				word = self.speakerVoc_decode[int(i)] + ": "
 				tokens.append(word)
-			except KeyError:
-				break
+			else:
+				try:
+					word = self.voc_decode[int(i)-self.params.special_word]
+					tokens.append(word)
+				except KeyError:
+					break
+			j = j+1
 		return " ".join(tokens)
 
 	def decode(self):
