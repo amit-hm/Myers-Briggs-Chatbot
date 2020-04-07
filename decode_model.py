@@ -124,6 +124,7 @@ class decode_model(persona):
 		self.readModel(self.params.model_folder,self.params.model_name)
 		self.Model.to(self.device)
 		self.ReadDictDecode()
+		self.ReadSpeakerDictcode()
 
 		self.output=path.join(self.params.output_folder,self.params.log_file)
 		if self.output!="":
