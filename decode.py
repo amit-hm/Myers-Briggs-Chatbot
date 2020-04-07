@@ -3,7 +3,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--data_folder', type=str, default='data/testing',
+parser.add_argument('--data_folder', type=str, default='data/testing/',
 					help='the folder that contains your dataset and vocabulary file')
 parser.add_argument('--decode_file', type=str, default='test.txt')
 parser.add_argument('--dictPath', type=str, default='vocabulary')
