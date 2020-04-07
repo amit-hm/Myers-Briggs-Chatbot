@@ -51,6 +51,7 @@ class data:
 			if line == ['']:
 				END = 1
 				break
+			print(line)
 			s = line[-2].split()[:self.params.source_max_length]
 			t = line[-1].split()[:self.params.target_max_length]
 			if s[1:]==[]:
