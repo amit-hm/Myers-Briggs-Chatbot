@@ -33,7 +33,7 @@ class softattention(nn.Module):
 	def __init__(self,params):
 		super(softattention, self).__init__()
 		dim = params.dimension
-		self.attlinear=nn.Linear(dim*2,dim,False)
+		self.attlinear=nn.Linear(dim*2,dim,False)	#1024 to 512
 	
 	def forward(self,target_t,context):
 		atten=torch.bmm(context,target_t.unsqueeze(2)).sum(2)
@@ -51,10 +51,11 @@ class lstm_source(nn.Module):
 	
 	def __init__(self,params):
 		super(lstm_source, self).__init__()
-		dim = params.dimension
-		layer = params.layers
-		self.dropout = nn.Dropout(p=params.dropout)
+		dim = params.dimension		#512
+		layer = params.layers		#4
+		self.dropout = nn.Dropout(p=params.dropout)	#dropout = 0.2
 		self.lstms=nn.LSTM(dim,dim,num_layers=layer,batch_first=True,bias=False,dropout=params.dropout)
+		#batch_first – If True, then the input and output tensors are provided as (batch, seq, feature)
 
 	def forward(self,embedding,length):
 		embedding = self.dropout(embedding)
@@ -69,12 +70,12 @@ class lstm_target(nn.Module):
 	def __init__(self,params):
 		super(lstm_target, self).__init__()
 		
-		dim = params.dimension
-		layer = params.layers
-		self.dropout = nn.Dropout(p=params.dropout)
-		self.speaker = params.SpeakerMode
-		self.addressee = params.AddresseeMode
-		persona_num = params.PersonaNum
+		dim = params.dimension	#512
+		layer = params.layers	#4
+		self.dropout = nn.Dropout(p=params.dropout)	#0.2
+		self.speaker = params.SpeakerMode	#default False
+		self.addressee = params.AddresseeMode	#default False
+		persona_num = params.PersonaNum		#2
 		
 		if self.speaker:
 			self.persona_embedding=nn.Embedding(persona_num,dim)
@@ -116,27 +117,27 @@ class lstm(nn.Module):
 
 	def __init__(self,params,vocab_num,EOT):
 		super(lstm, self).__init__()
-		dim = params.dimension
-		init_weight = params.init_weight
-		vocab_num = vocab_num + params.special_word
-		self.UNK = params.UNK+params.special_word
-		self.EOT = EOT
-		self.params=params
+		dim = params.dimension		#512
+		init_weight = params.init_weight		#0.1
+		vocab_num = vocab_num + params.special_word	#len(vocabulary) + 3
+		self.UNK = params.UNK+params.special_word	# 3
+		self.EOT = EOT		#2
+		self.params=params	
 		
 		self.encoder=lstm_source(params)
 		self.decoder=lstm_target(params)
 		
-		self.sembed=nn.Embedding(vocab_num,dim,padding_idx=0)
-		self.sembed.weight.data[1:].uniform_(-init_weight,init_weight)
-		self.tembed=nn.Embedding(vocab_num,dim,padding_idx=0)
+		self.sembed=nn.Embedding(vocab_num,dim,padding_idx=0)	#(len(vocabulary) + 3) * 512
+		self.sembed.weight.data[1:].uniform_(-init_weight,init_weight)	#init_weight = 0.1
+		self.tembed=nn.Embedding(vocab_num,dim,padding_idx=0)	#(len(vocabulary) + 3) * 512
 		self.tembed.weight.data[1:].uniform_(-init_weight,init_weight)
 		
-		self.softlinear=nn.Linear(dim,vocab_num,False)
-		w=torch.ones(vocab_num)
+		self.softlinear=nn.Linear(dim,vocab_num,False)	#512 * (len(vocabulary) + 3)
+		w=torch.ones(vocab_num)		#(len(vocabulary) + 3)
 		if not params.cpu:
 			w = w.cuda()
-		w[:self.EOT]=0
-		w[self.UNK]=0
+		w[:self.EOT]=0	#till 2
+		w[self.UNK]=0	#3
 		self.loss_function=torch.nn.CrossEntropyLoss(w, ignore_index=0, reduction='sum')
 
 	def forward(self,sources,targets,length,speaker_label,addressee_label):
@@ -168,8 +169,10 @@ class persona:
 		self.Model.decoder.apply(self.weights_init)
 		self.Model.softlinear.apply(self.weights_init)
 		self.Model.to(self.device)
+		
+		print("Device being used:",self.device)
 
-		self.output=path.join(params.save_folder,params.output_file)
+		self.output=path.join(params.save_folder,params.output_file)	#save/testing/log
 		if self.output!="":
 			with open(self.output,"w") as selfoutput:
 				selfoutput.write("")
@@ -194,7 +197,7 @@ class persona:
 				self.voc[line.strip()] = len(self.voc)
 
 	def test(self):
-		open_train_file=path.join(self.params.data_folder,self.params.dev_file)
+		open_train_file=path.join(self.params.data_folder,self.params.dev_file)		#data/testing/valid.txt
 		total_loss = 0
 		total_tokens = 0
 		END=0
@@ -237,12 +240,12 @@ class persona:
 		print("finished saving")
 
 	def saveParams(self):
-		save_params_path = path.join(self.params.save_folder,self.params.save_params)
+		save_params_path = path.join(self.params.save_folder,self.params.save_params)	#save/testing/params
 		with open(save_params_path,"wb") as file:
 			pickle.dump(self.params,file)
 
 	def readModel(self,save_folder,model_name,re_random_weights=None):
-		target_model = torch.load(path.join(save_folder,model_name))
+		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/params/model
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
@@ -251,14 +254,14 @@ class persona:
 		print("read model done")
 
 	def train(self):
-		if not self.params.no_save:
+		if not self.params.no_save:	#default False
 			self.saveParams()
-		if self.params.fine_tuning:
+		if self.params.fine_tuning:	#default False
 			if self.params.SpeakerMode or self.params.AddresseeMode:
 				re_random_weights = ['decoder.persona_embedding.weight'] # Also have to include some layers of the LSTM module...
 			else:
 				re_random_weights = None
-			self.readModel(self.params.save_folder,self.params,fine_tuning_model,re_random_weights)
+			self.readModel(self.params.save_folder,self.params.fine_tuning_model,re_random_weights)
 		self.iter=0
 		start_halving=False
 		self.lr=self.params.alpha
