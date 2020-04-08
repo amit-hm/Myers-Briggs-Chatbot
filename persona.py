@@ -212,8 +212,9 @@ class persona:
 			speaker_label=speaker_label.to(self.device)
 			addressee_label=addressee_label.to(self.device)
 			length=length.to(self.device)
-			total_tokens+=token_num
-			self.Model.eval()
+			
+			total_tokens+=token_num		# adding total number of words in Target for each batch
+			self.Model.eval()	#setting eval mode
 			with torch.no_grad():
 				loss = self.Model(sources,targets,length,speaker_label,addressee_label)
 				total_loss+=loss.item()
