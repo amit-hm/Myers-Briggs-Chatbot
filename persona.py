@@ -171,8 +171,8 @@ class persona:
 		self.Model.to(self.device)
 		
 		print("Original params")
-		for name in self.Model.parameters():
-			print(name)
+		for name, param in model.named_parameters():
+			print(name, param.size())
 		
 		print("Device being used:",self.device)
 
@@ -252,7 +252,7 @@ class persona:
 	def readModel(self,save_folder,model_name,re_random_weights=None):
 		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/model
 		for name in target_model:
-			print(name)
+			print(name,name.size())
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
