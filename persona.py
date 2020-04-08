@@ -252,7 +252,7 @@ class persona:
 				random_weight = self.Model.state_dict()[weight_name]
 				target_model[weight_name] = random_weight
 		for name, params in target_model:
-			if name == "decoder.lstmt.weight_ih_l0""
+			if name == "decoder.lstmt.weight_ih_l0":
 				self.Model[name][:,:1024] = params
 			else:
 				self.Model[name] = params
