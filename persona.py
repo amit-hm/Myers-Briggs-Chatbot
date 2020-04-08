@@ -255,9 +255,9 @@ class persona:
 		print(type(self.Model))
 		for name in target_model:
 			if name == "decoder.lstmt.weight_ih_l0":
-				self.Model[name][:,:1024] = target_model[name]
+				self.Model.parmaeters()[name][:,:1024] = target_model[name]
 			else:
-				self.Model[name] = target_model[name]
+				self.Model.parmaeters()[name] = target_model[name]
 		#self.Model.load_state_dict(target_model)
 		print("read model done")
 		print("Loaded Model")
