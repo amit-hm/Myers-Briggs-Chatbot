@@ -108,7 +108,6 @@ class lstm_target(nn.Module):
 			combined_embed = self.speaker_linear(speaker_embed) + self.addressee_linear(addressee_embed)
 			combined_embed = nn.Tanh()(combined_embed)
 			lstm_input=torch.cat((lstm_input,combined_embed),-1)
-		print(lstm_input.size(),h.size(),c.size())
 		_,(h,c)=self.lstmt(lstm_input.unsqueeze(1),(h,c))
 		pred=self.soft_atten(h[-1],context)
 		return pred,h,c
@@ -252,7 +251,12 @@ class persona:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
 				target_model[weight_name] = random_weight
-		self.Model.load_state_dict(target_model)
+		for name, params in target_model:
+			if name == "decoder.lstmt.weight_ih_l0""
+				self.Model[name][:,:1024] = params
+			else:
+				self.Model[name] = params
+		#self.Model.load_state_dict(target_model)
 		print("read model done")
 		print("Loaded Model")
 		
