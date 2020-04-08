@@ -108,6 +108,7 @@ class lstm_target(nn.Module):
 			combined_embed = self.speaker_linear(speaker_embed) + self.addressee_linear(addressee_embed)
 			combined_embed = nn.Tanh()(combined_embed)
 			lstm_input=torch.cat((lstm_input,combined_embed),-1)
+		print(lstm_input.size(),h.size(),c.size())
 		_,(h,c)=self.lstmt(lstm_input.unsqueeze(1),(h,c))
 		pred=self.soft_atten(h[-1],context)
 		return pred,h,c
@@ -169,10 +170,6 @@ class persona:
 		self.Model.decoder.apply(self.weights_init)
 		self.Model.softlinear.apply(self.weights_init)
 		self.Model.to(self.device)
-		
-		print("Original params")
-		for name, param in self.Model.named_parameters():
-			print(name, param.size())
 		
 		print("Device being used:",self.device)
 
@@ -251,9 +248,6 @@ class persona:
 
 	def readModel(self,save_folder,model_name,re_random_weights=None):
 		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/model
-		print(target_model)
-		for name in target_model:
-			print(name,target_model[name].size())
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
