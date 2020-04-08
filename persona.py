@@ -261,7 +261,7 @@ class persona:
 			if name == "decoder.lstmt.weight_ih_l0":
 				target_model[name] = torch.cat((target_model[name],self.Model.state_dict()[name][:,1024:]),-1)
 				
-		self.Model.load_state_dict(target_model)
+		self.Model.state_dict().update(target_model)
 		
 		for name, param in self.Model.named_parameters():
 			if name == "encoder.lstms.weight_ih_l0":
