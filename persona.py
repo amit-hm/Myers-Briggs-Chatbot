@@ -170,6 +170,10 @@ class persona:
 		self.Model.softlinear.apply(self.weights_init)
 		self.Model.to(self.device)
 		
+		print("Original params")
+		for name, param in self.Model.named_parameters():
+			print(name, param.data)
+		
 		print("Device being used:",self.device)
 
 		self.output=path.join(params.save_folder,params.output_file)	#save/testing/log
@@ -253,6 +257,9 @@ class persona:
 				target_model[weight_name] = random_weight
 		self.Model.load_state_dict(target_model)
 		print("read model done")
+		print("Loaded Model")
+		for name, param in self.Model.named_parameters():
+			print(name, param.data)
 
 	def train(self):
 		if not self.params.no_save:	#default False
