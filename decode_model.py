@@ -185,7 +185,6 @@ class decode_model(persona):
 			if END!=0:
 				break
 			n_decode_instance += sources.size(0)
-			print(targets)
 			
 			if self.params.max_decoding_number != 0 and n_decode_instance >= self.params.max_decoding_number:
 				break
