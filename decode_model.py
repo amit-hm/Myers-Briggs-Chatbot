@@ -100,12 +100,13 @@ class lstm_decoder(lstm):
 class decode_model(persona):
 
 	def __init__(self, params):
-		with open(path.join(params.model_folder,params.params_name), 'rb') as file:
+		with open(path.join(params.model_folder,params.params_name), 'rb') as file:	#save/testing/params
 			adapted_params = pickle.load(file)
 		for key in vars(params):
 			vars(adapted_params)[key] = vars(params)[key]
 		adapted_params.dev_file = adapted_params.decode_file
 		self.params=adapted_params
+		
 		if self.params.SpeakerMode:
 			print("decoding in speaker mode")
 		elif self.params.AddresseeMode:
@@ -121,8 +122,9 @@ class decode_model(persona):
 			self.device="cpu"
 
 		self.Model = lstm_decoder(self.params,len(self.voc),self.Data.EOT)
-		self.readModel(self.params.model_folder,self.params.model_name)
+		self.readModel(self.params.model_folder,self.params.model_name)		#save/testing/model
 		self.Model.to(self.device)
+		
 		self.ReadDictDecode()
 		self.ReadSpeakerDictcode()
 
@@ -165,16 +167,18 @@ class decode_model(persona):
 
 	def decode(self):
 		self.mode="decode"
-		open_train_file = path.join(self.params.data_folder,self.params.decode_file)
+		open_train_file = path.join(self.params.data_folder,self.params.decode_file)	#data/testing/test.txt
 
 		if self.params.SpeakerMode:
-			decode_output = path.join(self.params.output_folder,
-							self.params.decode_file+"_S"+str(self.params.SpeakerId)+"_"+self.params.output_file)
+			decode_output = path.join(self.params.output_folder,self.params.decode_file+"_S"+str(self.params.SpeakerId)+"_"+self.params.output_file)
+			#outputs/test_S1_output.txt
 		elif self.params.AddresseeMode:
 			decode_output = path.join(self.params.output_folder,
 							self.params.decode_file+"_S"+str(self.params.SpeakerId)+"A"+str(self.params.AddresseeId)+"_"+self.params.output_file)
 		else:
 			decode_output = path.join(self.params.output_folder,self.params.decode_file+"_"+self.params.output_file)
+			#outputs/test_output.txt
+			
 		with open(decode_output,"w") as open_write_file:
 			open_write_file.write("")
 
@@ -187,12 +191,15 @@ class decode_model(persona):
 			if END!=0:
 				break
 			n_decode_instance += sources.size(0)
+			
 			if self.params.max_decoding_number != 0 and n_decode_instance >= self.params.max_decoding_number:
 				break
 			if sources is None:
 				continue
+				
 			speaker_label.fill_(self.params.SpeakerId-1)
 			addressee_label.fill_(self.params.AddresseeId-1)
+			
 			sources=sources.to(self.device)
 			targets=targets.to(self.device)
 			speaker_label=speaker_label.to(self.device)
@@ -200,9 +207,10 @@ class decode_model(persona):
 			peaker_label=speaker_label.to(self.device)
 			addressee_label=addressee_label.to(self.device)
 			length=length.to(self.device)
+			
 			self.origin = origin
 			self.source_size = sources.size(0)
-			self.Model.eval()
+			self.Model.eval()	#eval mode
 			with torch.no_grad():
 				completed_history = self.Model(sources,targets,length,speaker_label,addressee_label,self.mode)
 			self.OutPut(decode_output,completed_history)
