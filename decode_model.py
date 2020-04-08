@@ -151,18 +151,12 @@ class decode_model(persona):
 		### For raw-word data:
 		# self.voc_decode[len(self.voc_decode)] = '[unknown]'
 		tokens = []
-		j = 0
 		for i in ids:
-			if j == 0:
-				word = self.speakerVoc_decode[int(i)] + ": "
+			try:
+				word = self.voc_decode[int(i)-self.params.special_word]
 				tokens.append(word)
-			else:
-				try:
-					word = self.voc_decode[int(i)-self.params.special_word]
-					tokens.append(word)
-				except KeyError:
-					break
-			j = j+1
+			except KeyError:
+				break
 		return " ".join(tokens)
 
 	def decode(self):
@@ -227,7 +221,7 @@ class decode_model(persona):
 				# print_string = origin
 				print_string = self.id2word(self.origin[i])
 				print_string += "|"
+				print_string += self.speakerVoc_decode[self.params.AddresseeId-1] + ": "
 				print_string += self.id2word(completed_history[i].cpu().numpy())
 				with open(decode_output,"a") as file:
 					file.write(print_string+"\n")
-
