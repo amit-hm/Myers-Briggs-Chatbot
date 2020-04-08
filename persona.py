@@ -170,6 +170,9 @@ class persona:
 		self.Model.softlinear.apply(self.weights_init)
 		self.Model.to(self.device)
 		
+		for name, param in self.Model.named_parameters():
+			print(name,param.size())
+		
 		print("Device being used:",self.device)
 
 		self.output=path.join(params.save_folder,params.output_file)	#save/testing/log
