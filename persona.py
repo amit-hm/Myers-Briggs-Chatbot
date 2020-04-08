@@ -258,11 +258,11 @@ class persona:
 		if not self.params.no_save:	#default False
 			self.saveParams()
 		if self.params.fine_tuning:	#default False
-			if self.params.SpeakerMode or self.params.AddresseeMode:
+			'''if self.params.SpeakerMode or self.params.AddresseeMode:
 				re_random_weights = ['decoder.persona_embedding.weight'] # Also have to include some layers of the LSTM module...
 			else:
-				re_random_weights = None
-			self.readModel(self.params.save_folder,self.params.fine_tuning_model,re_random_weights)
+				re_random_weights = None'''
+			self.readModel(self.params.save_folder,self.params.fine_tuning_model)	#re_random_weights
 		self.iter=0
 		start_halving=False
 		self.lr=self.params.alpha
