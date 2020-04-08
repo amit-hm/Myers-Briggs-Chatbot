@@ -171,7 +171,7 @@ class persona:
 		self.Model.to(self.device)
 		
 		print("Original params")
-		for name, param in model.named_parameters():
+		for name, param in self.Model.named_parameters():
 			print(name, param.size())
 		
 		print("Device being used:",self.device)
