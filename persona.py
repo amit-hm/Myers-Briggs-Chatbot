@@ -251,19 +251,18 @@ class persona:
 
 	def readModel(self,save_folder,model_name,re_random_weights=None):
 		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/model
-		for name in target_model:
-			if name == "encoder.lstms.weight_ih_l0":
-				print(name, target_model[name])
+		
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
 				target_model[weight_name] = random_weight
+				
 		for name in target_model:
 			if name == "decoder.lstmt.weight_ih_l0":
-				self.Model.state_dict()[name][:,:1024] = target_model[name]
-			else:
-				self.Model.state_dict()[name] = target_model[name]
-		#self.Model.load_state_dict(target_model)
+				target_model[name] = torch.cat(target_model[name],self.Model.state_dict()[name][:,1024:],-1)
+				
+		self.Model.load_state_dict(target_model)
+		
 		for name, param in self.Model.named_parameters():
 			if name == "encoder.lstms.weight_ih_l0":
 				print(name,param)
