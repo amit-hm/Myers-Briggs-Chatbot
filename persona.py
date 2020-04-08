@@ -251,7 +251,7 @@ class persona:
 
 	def readModel(self,save_folder,model_name,re_random_weights=None):
 		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/model
-		for name, param in target_model.named_parameters():
+		for name in target_model.state_dict():
 			print(name)
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
