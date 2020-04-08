@@ -140,7 +140,7 @@ class decode_model(persona):
 			for line in doc:
 				self.voc_decode[len(self.voc_decode)] = line.strip()
 				
-	def ReadSpeakerDictcode(self);
+	def ReadSpeakerDictcode(self):
 		self.speakerVoc_decode = dict()
 		with open(path.join(self.params.data_folder,self.params.speakerDictPath),'r') as doc:
 			for line in doc:
@@ -153,7 +153,7 @@ class decode_model(persona):
 		tokens = []
 		j = 0
 		for i in ids:
-			if j = 0:
+			if j == 0:
 				word = self.speakerVoc_decode[int(i)] + ": "
 				tokens.append(word)
 			else:
