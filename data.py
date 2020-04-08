@@ -62,9 +62,14 @@ class data:
 			elif t[1:]==[] and mode!='decode':	#if only one word in Target (i.e Addressee ID) AND mode!='decode'
 				a+=1
 				continue
-				
-			source=self.encode(s[1:])	#encoding speech of the speaker
-			target=[self.EOS]+self.encode(t[1:])+[self.EOT]		#encoding speech of the addressee
+			
+			if self.params.SpeakerMode or self.params.AddresseeMode:
+				source=self.encode(s[1:])	#encoding speech of the speaker
+				target=[self.EOS]+self.encode(t[1:])+[self.EOT]		#encoding speech of the addressee
+			else:
+				source=self.encode(s[0:])	#encoding speech of the speaker
+				target=[self.EOS]+self.encode(t[0:])+[self.EOT]		#encoding speech of the addressee
+			
 			l_s=len(source)	#length of Source
 			l_t=len(target)	#length of Target
 			l_s_set.add(l_s)
