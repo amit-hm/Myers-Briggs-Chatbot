@@ -253,7 +253,7 @@ class persona:
 		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/model
 		print(target_model)
 		for name in target_model:
-			print(name,type(name))
+			print(name,target_model[name].size())
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
