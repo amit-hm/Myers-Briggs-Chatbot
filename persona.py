@@ -172,7 +172,7 @@ class persona:
 		
 		print("Original params")
 		for name, param in self.Model.named_parameters():
-			print(name, param.data)
+			print(name)
 		
 		print("Device being used:",self.device)
 
@@ -250,7 +250,9 @@ class persona:
 			pickle.dump(self.params,file)
 
 	def readModel(self,save_folder,model_name,re_random_weights=None):
-		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/params/model
+		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/model
+		for name, param in target_model.named_parameters():
+			print(name)
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
@@ -258,8 +260,7 @@ class persona:
 		self.Model.load_state_dict(target_model)
 		print("read model done")
 		print("Loaded Model")
-		for name, param in self.Model.named_parameters():
-			print(name, param.data)
+		
 
 	def train(self):
 		if not self.params.no_save:	#default False
