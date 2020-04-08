@@ -171,7 +171,7 @@ class persona:
 		self.Model.to(self.device)
 		
 		for name, param in self.Model.named_parameters():
-			print(name,param.size())
+			print(name,param)
 		
 		print("Device being used:",self.device)
 
@@ -261,7 +261,7 @@ class persona:
 				self.Model.state_dict()[name] = target_model[name]
 		#self.Model.load_state_dict(target_model)
 		for name, param in self.Model.named_parameters():
-			print(name,param.size())
+			print(name,param)
 		print("read model done")
 		print("Loaded Model")
 		
