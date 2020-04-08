@@ -18,7 +18,7 @@ class data:
 		# EOT: End of target
 		self.EOT = 2
 		self.padding = 0  # Not used, just a reminder
-		self.UNK = params.UNK+params.special_word
+		self.UNK = params.UNK+params.special_word		#sel.UNK = 3
 		
 	def encode(self, tokens):
 		ids = []
@@ -37,9 +37,9 @@ class data:
 
 	def read_batch(self, file, num, mode='train_or_test'):
 		origin = []
-		sources = np.zeros((self.params.batch_size, self.params.source_max_length+1))
-		targets = np.zeros((self.params.batch_size, self.params.source_max_length+1))
-		speaker_label = -np.ones(self.params.batch_size)
+		sources = np.zeros((self.params.batch_size, self.params.source_max_length+1))	#batch_size*50
+		targets = np.zeros((self.params.batch_size, self.params.source_max_length+1))	#batch_size*50
+		speaker_label = -np.ones(self.params.batch_size)	#all speaker IDs are set to -1
 		addressee_label = -np.ones(self.params.batch_size)
 		l_s_set = set()
 		l_t_set = set()
@@ -47,42 +47,44 @@ class data:
 		a=0
 		for i in range(self.params.batch_size):
 			line = linecache.getline(file,num*self.params.batch_size+i+1).strip().split("|")
-			i-=a
+			i-=a	#to adjust for skipped lines
 			if line == ['']:
 				END = 1
 				break
-			if len(line)<2:
-				print(line)
+				
 			s = line[-2].split()[:self.params.source_max_length]
 			t = line[-1].split()[:self.params.target_max_length]
 			
-			if s[1:]==[]:
+			#skipping lines when Speaker or Addressee speech is empty
+			if s[1:]==[]:	#if only one word in Source (i.e Speaker ID)
 				a+=1
 				continue
-			elif t[1:]==[] and mode!='decode':
+			elif t[1:]==[] and mode!='decode':	#if only one word in Target (i.e Addressee ID) AND mode!='decode'
 				a+=1
 				continue
-			source=self.encode(s[1:])
-			target=[self.EOS]+self.encode(t[1:])+[self.EOT]
-			l_s=len(source)
-			l_t=len(target)
+				
+			source=self.encode(s[1:])	#encoding speech of the speaker
+			target=[self.EOS]+self.encode(t[1:])+[self.EOT]		#encoding speech of the addressee
+			l_s=len(source)	#length of Source
+			l_t=len(target)	#length of Target
 			l_s_set.add(l_s)
 			l_t_set.add(l_t)
+			
 			### If the data contains words, not numbers:
 			# origin.append(' '.join(s[1:]))
 			origin.append(source)
-			sources[i, :l_s]=source
-			targets[i, :l_t]=target
+			sources[i, :l_s]=source		#last few elements will be 0
+			targets[i, :l_t]=target		#last few elements will be 0
 			try:
-				speaker_label[i]=int(s[0])-1
-				addressee_label[i]=int(t[0])-1
+				speaker_label[i]=int(s[0])-1	#speaker id (zero-indexed)
+				addressee_label[i]=int(t[0])-1	#addressee id (zero-indexed)
 			except:
 				print('Persona id cannot be transferred to numbers')
 			i+=1
 
 		try:
-			max_l_s=max(l_s_set)
-			max_l_t=max(l_t_set)
+			max_l_s=max(l_s_set)	#length of longest Source sentence in the batch
+			max_l_t=max(l_t_set)	#length of longest Target sentence in the batch
 		except ValueError:
 			return END,None,None,None,None,None,None,None
 
@@ -92,13 +94,13 @@ class data:
 			return END,None,None,None,None,None,None,None
 			
 		
-		sources=sources[:i, : max_l_s]
-		targets=targets[:i, : max_l_t]
+		sources=sources[:i, : max_l_s]		#cutting everything beyong max_l_s
+		targets=targets[:i, : max_l_t]		#cutting everything beyong max_l_t
 		speaker_label=speaker_label[:i]
 		addressee_label=addressee_label[:i]
-		length_s=(sources!=0).sum(1)
-		mask_t=np.ones(targets.shape)*(targets!=0)
-		token_num=mask_t[:,1:].sum()
+		
+		length_s=(sources!=0).sum(1)	#batch_size, each element is sum of number of words in each sample (includes speaker IDs)
+		mask_t=np.ones(targets.shape)*(targets!=0)	# batch_size*max_l_t; 1 in place where the words exist in target, elsewhere 0
+		token_num=mask_t[:,1:].sum()	#total number of words in Target (not including Addressee IDs)
 
 		return END,tensor(sources).long(),tensor(targets).long(),tensor(speaker_label).long(),tensor(addressee_label).long(),tensor(length_s).long(),token_num,origin
-	
