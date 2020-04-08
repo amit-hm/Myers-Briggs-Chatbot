@@ -97,7 +97,7 @@ class lstm_target(nn.Module):
 		context1 = self.dropout(context1)
 		lstm_input=torch.cat((embedding,context1),-1)
 		if self.speaker:
-			speaker_embed=self.persona_embedding(speaker_label)
+			speaker_embed=self.persona_embedding(addressee_label)
 			speaker_embed = self.dropout(speaker_embed)
 			lstm_input=torch.cat((lstm_input,speaker_embed),-1)
 		elif self.addressee:
