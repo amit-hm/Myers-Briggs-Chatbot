@@ -101,6 +101,6 @@ class data:
 		
 		length_s=(sources!=0).sum(1)	#batch_size, each element is sum of number of words in each sample (includes speaker IDs)
 		mask_t=np.ones(targets.shape)*(targets!=0)	# batch_size*max_l_t; 1 in place where the words exist in target, elsewhere 0
-		token_num=mask_t[:,1:].sum()	#total number of words in Target (not including Addressee IDs)
+		token_num=mask_t[:,1:].sum()	#total number of words in Target for each batch (not including Addressee IDs)
 
 		return END,tensor(sources).long(),tensor(targets).long(),tensor(speaker_label).long(),tensor(addressee_label).long(),tensor(length_s).long(),token_num,origin
