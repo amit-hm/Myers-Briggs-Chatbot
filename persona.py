@@ -142,10 +142,10 @@ class lstm(nn.Module):
 
 	def forward(self,sources,targets,length,speaker_label,addressee_label):
 		source_embed=self.sembed(sources)
-		context,h,c=self.encoder(source_embed,length)
+		context,h,c=self.encoder(source_embed,length)	#LSTM Source
 		loss=0
 
-		for i in range(targets.size(1)-1):
+		for i in range(targets.size(1)-1):	#max_l_t - 1
 			target_embed=self.tembed(targets[:,i])
 			pred,h,c=self.decoder(context,h,c,target_embed,speaker_label,addressee_label)
 			pred=self.softlinear(pred)
@@ -276,7 +276,7 @@ class persona:
 					selfoutput.write("iter  "+str(self.iter)+"\n")
 			if self.iter>self.params.start_halve:
 				self.lr=self.lr*0.5
-			open_train_file=path.join(self.params.data_folder,self.params.train_file)
+			open_train_file=path.join(self.params.data_folder,self.params.train_file)	#data/testing/train.txt
 			END=0
 			batch_n=0
 			while END==0:
@@ -285,13 +285,15 @@ class persona:
 				batch_n+=1
 				if sources is None:
 					continue
+					
 				sources=sources.to(self.device)
 				targets=targets.to(self.device)
 				speaker_label=speaker_label.to(self.device)
 				addressee_label=addressee_label.to(self.device)
 				length=length.to(self.device)
+				
 				self.source_size = sources.size(0)
-				self.Model.train()
+				self.Model.train()	#train mode
 				loss = self.Model(sources,targets,length,speaker_label,addressee_label)
 				loss.backward()
 				self.update()
