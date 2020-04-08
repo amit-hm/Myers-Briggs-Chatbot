@@ -21,7 +21,7 @@ parser.add_argument('--special_word', type=int, default=3,
 					help='default special words include: padding, EOS, EOT.')
 
 parser.add_argument('--fine_tuning', action='store_true')
-parser.add_argument('--fine_tunine_model', type=str, default='model')
+parser.add_argument('--fine_tuning_model', type=str, default='model')
 
 parser.add_argument('--PersonaNum', type=int, default=2)
 parser.add_argument('--SpeakerMode', action='store_true')
