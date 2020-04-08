@@ -251,11 +251,13 @@ class persona:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
 				target_model[weight_name] = random_weight
-		for name, params in target_model:
+		print(type(target_model))
+		print(type(self.Model))
+		for name in target_model:
 			if name == "decoder.lstmt.weight_ih_l0":
-				self.Model[name][:,:1024] = params
+				self.Model[name][:,:1024] = target_model[name]
 			else:
-				self.Model[name] = params
+				self.Model[name] = target_model[name]
 		#self.Model.load_state_dict(target_model)
 		print("read model done")
 		print("Loaded Model")
