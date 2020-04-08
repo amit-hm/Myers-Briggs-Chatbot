@@ -30,6 +30,7 @@ class lstm_decoder(lstm):
 			elif mode != 'decode':
 				raise NameError('Wrong mode: '+mode)
 			elif self.params.setting == 'beam_search':
+				print(targets[:,0])
 				start=self.tembed(targets[:,0])
 				return self.beam_search(start,context,h,c,speaker_label,addressee_label)
 			else: 
