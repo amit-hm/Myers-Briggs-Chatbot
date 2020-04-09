@@ -170,10 +170,6 @@ class persona:
 		self.Model.softlinear.apply(self.weights_init)
 		self.Model.to(self.device)
 		
-		for name, param in self.Model.named_parameters():
-			if name == "encoder.lstms.weight_ih_l0":
-				print(name,param)
-		
 		print("Device being used:",self.device)
 
 		self.output=path.join(params.save_folder,params.output_file)	#save/testing/log
@@ -258,8 +254,6 @@ class persona:
 				target_model[weight_name] = random_weight
 				
 		for name in target_model:
-			if name == "encoder.lstms.weight_ih_l0":
-				print(name, target_model[name])
 			if name == "decoder.lstmt.weight_ih_l0":
 				target_model[name] = torch.cat((target_model[name],self.Model.state_dict()[name][:,1024:]),-1)
 		
@@ -268,9 +262,6 @@ class persona:
 		#self.Model.state_dict().update(target_model)
 		self.Model.load_state_dict(target_model)
 		
-		for name, param in self.Model.named_parameters():
-			if name == "encoder.lstms.weight_ih_l0":
-				print(name,param)
 		print("read model done")
 		print("Loaded Model")
 		
