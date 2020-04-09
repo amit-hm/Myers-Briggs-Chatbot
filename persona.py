@@ -253,7 +253,7 @@ class persona:
 				random_weight = self.Model.state_dict()[weight_name]
 				target_model[weight_name] = random_weight
 		
-		if model_name == "model_opensub":
+		if model_name == "transfer_model":
 			for name in target_model:
 				if name == "decoder.lstmt.weight_ih_l0":
 					target_model[name] = torch.cat((target_model[name],self.Model.state_dict()[name][:,1024:]),-1)
