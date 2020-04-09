@@ -262,6 +262,9 @@ class persona:
 		#self.Model.state_dict().update(target_model)
 		self.Model.load_state_dict(target_model)
 		
+		for name, param in self.Model.named_parameters():
+			print(name,param.size())
+			
 		print("read model done")
 		print("Loaded Model")
 		
