@@ -252,18 +252,15 @@ class persona:
 			for weight_name in re_random_weights:
 				random_weight = self.Model.state_dict()[weight_name]
 				target_model[weight_name] = random_weight
-				
-		for name in target_model:
-			if name == "decoder.lstmt.weight_ih_l0":
-				target_model[name] = torch.cat((target_model[name],self.Model.state_dict()[name][:,1024:]),-1)
 		
-		target_model['decoder.persona_embedding.weight'] = self.Model.state_dict()['decoder.persona_embedding.weight']
-				
-		#self.Model.state_dict().update(target_model)
+		if model_name == "model_opensub":
+			for name in target_model:
+				if name == "decoder.lstmt.weight_ih_l0":
+					target_model[name] = torch.cat((target_model[name],self.Model.state_dict()[name][:,1024:]),-1)
+
+			target_model['decoder.persona_embedding.weight'] = self.Model.state_dict()['decoder.persona_embedding.weight']
+
 		self.Model.load_state_dict(target_model)
-		
-		for name, param in self.Model.named_parameters():
-			print(name,param.size())
 			
 		print("read model done")
 		print("Loaded Model")
