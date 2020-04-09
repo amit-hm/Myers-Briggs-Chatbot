@@ -262,6 +262,8 @@ class persona:
 				print(name, target_model[name])
 			if name == "decoder.lstmt.weight_ih_l0":
 				target_model[name] = torch.cat((target_model[name],self.Model.state_dict()[name][:,1024:]),-1)
+		
+		target_model['decoder.persona_embedding.weight'] = self.Model.state_dict()['decoder.persona_embedding.weight']
 				
 		#self.Model.state_dict().update(target_model)
 		self.Model.load_state_dict(target_model)
