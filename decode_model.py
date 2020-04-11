@@ -221,7 +221,8 @@ class decode_model(persona):
 				# print_string = origin
 				print_string = self.id2word(self.origin[i])
 				print_string += "|"
-				print_string += self.speakerVoc_decode[self.params.AddresseeId-1] + ": "
+				if self.params.SpeakerMode or self.params.AddresseeMode:
+					print_string += self.speakerVoc_decode[self.params.AddresseeId-1] + ": "
 				print_string += self.id2word(completed_history[i].cpu().numpy())
 				with open(decode_output,"a") as file:
 					file.write(print_string+"\n")
