@@ -163,7 +163,7 @@ class decode_model_2(persona):
 		self.mode="decode"
 		self.params.batch_size = 1
 		line = line + "|How are you"
-		self.params.AddresseeId = AddresseeId
+		self.params.AddresseeId = int(AddresseeId)
 		
 		END=0
 		batch_n=0
