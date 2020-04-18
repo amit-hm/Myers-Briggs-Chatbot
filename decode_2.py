@@ -39,5 +39,8 @@ print()
 
 if __name__ == '__main__':
 	model = decode_model_2(args)
-	model.decode()
+	
+	line = input ("You: ")
+	
+	model.decode(line)
 	# model.test()
