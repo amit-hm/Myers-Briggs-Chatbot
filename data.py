@@ -24,7 +24,6 @@ class data:
 		ids = []
 		for token in tokens:
 			if mode == "decode" and batch_size == 1:
-				print("Yes")
 				### For raw-word data:
 				try:
 					ids.append(self.voc[token]+self.params.special_word)
@@ -87,11 +86,12 @@ class data:
 			origin.append(source)
 			sources[i, :l_s]=source		#last few elements will be 0
 			targets[i, :l_t]=target		#last few elements will be 0
-			try:
-				speaker_label[i]=int(s[0])-1	#speaker id (zero-indexed)
-				addressee_label[i]=int(t[0])-1	#addressee id (zero-indexed)
-			except:
-				print('Persona id cannot be transferred to numbers')
+			if mode!='decode':
+				try:
+					speaker_label[i]=int(s[0])-1	#speaker id (zero-indexed)
+					addressee_label[i]=int(t[0])-1	#addressee id (zero-indexed)
+				except:
+					print('Persona id cannot be transferred to numbers')
 			i+=1
 
 		try:
