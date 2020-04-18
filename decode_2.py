@@ -40,8 +40,12 @@ print()
 if __name__ == '__main__':
 	model = decode_model_2(args)
 	
-	line = input ("You: ")
 	AddresseeId = input("Addressee ID: ")
+	while True:
+		line = input ("You: ")
+		if line == "end":
+			break
+	
 	
 	model.decode(line,AddresseeId)
 	# model.test()
