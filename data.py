@@ -71,8 +71,8 @@ class data:
 				continue
 			
 			if self.params.SpeakerMode or self.params.AddresseeMode:
-				source=self.encode(s[1:])	#encoding speech of the speaker
-				target=[self.EOS]+self.encode(t[1:])+[self.EOT]		#encoding speech of the addressee
+				source=self.encode(s[1:], self.params.batch_size, mode)	#encoding speech of the speaker
+				target=[self.EOS]+self.encode(t[1:], self.params.batch_size, mode)+[self.EOT]		#encoding speech of the addressee
 			else:
 				source=self.encode(s[0:], self.params.batch_size, mode)	#encoding speech of the speaker
 				target=[self.EOS]+self.encode(t[0:], self.params.batch_size, mode)+[self.EOT]		#encoding speech of the addressee
