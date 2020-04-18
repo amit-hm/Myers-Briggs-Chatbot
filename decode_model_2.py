@@ -194,10 +194,10 @@ class decode_model_2(persona):
 			self.Model.eval()	#eval mode
 			with torch.no_grad():
 				completed_history = self.Model(sources,targets,length,speaker_label,addressee_label,self.mode)
-			self.OutPut(decode_output,completed_history)
+			self.OutPut(completed_history)
 		print("decoding done")
 
-	def OutPut(self,decode_output,completed_history):
+	def OutPut(self,completed_history):
 		for i in range(self.source_size):
 			if self.params.response_only:
 				print_string=self.id2word(completed_history[i].cpu().numpy())
