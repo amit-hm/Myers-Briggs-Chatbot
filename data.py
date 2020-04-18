@@ -46,7 +46,10 @@ class data:
 		END=0
 		a=0
 		for i in range(self.params.batch_size):
-			line = linecache.getline(file,num*self.params.batch_size+i+1).strip().split("|")
+			if mode == "decode" and self.params.batch_size == 1:
+				line = file
+			else:
+				line = linecache.getline(file,num*self.params.batch_size+i+1).strip().split("|")
 			i-=a	#to adjust for skipped lines
 			if line == ['']:
 				END = 1
