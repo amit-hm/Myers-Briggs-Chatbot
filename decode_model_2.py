@@ -190,7 +190,6 @@ class decode_model_2(persona):
 		with torch.no_grad():
 			completed_history = self.Model(sources,targets,length,speaker_label,addressee_label,self.mode)
 		self.OutPut(completed_history)
-		print("decoding done")
 
 	def OutPut(self,completed_history):
 		for i in range(self.source_size):
