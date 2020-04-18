@@ -159,28 +159,17 @@ class decode_model(persona):
 				break
 		return " ".join(tokens)
 
-	def decode(self):
+	def decode(self, line, AddresseeId):
 		self.mode="decode"
-		open_train_file = path.join(self.params.data_folder,self.params.decode_file)	#data/testing/test.txt
-
-		if self.params.SpeakerMode:
-			decode_output = path.join(self.params.output_folder,self.params.decode_file+"_S"+str(self.params.SpeakerId)+"_"+self.params.output_file)
-			#outputs/test_S1_output.txt
-		elif self.params.AddresseeMode:
-			decode_output = path.join(self.params.output_folder,
-							self.params.decode_file+"_S"+str(self.params.SpeakerId)+"A"+str(self.params.AddresseeId)+"_"+self.params.output_file)
-		else:
-			decode_output = path.join(self.params.output_folder,self.params.decode_file+"_"+self.params.output_file)
-			#outputs/test_output.txt
-			
-		with open(decode_output,"w") as open_write_file:
-			open_write_file.write("")
-
+		self.params.batch_size = 1
+		line = line + "|How are you"
+		self.params.AddresseeId = AddresseeId
+		
 		END=0
 		batch_n=0
 		n_decode_instance=0
 		while END==0:
-			END,sources,targets,speaker_label,addressee_label,length,token_num,origin = self.Data.read_batch(open_train_file,batch_n,self.mode)
+			END,sources,targets,speaker_label,addressee_label,length,token_num,origin = self.Data.read_batch(line,batch_n,self.mode)
 			batch_n+=1
 			if END!=0:
 				break
@@ -198,8 +187,6 @@ class decode_model(persona):
 			targets=targets.to(self.device)
 			speaker_label=speaker_label.to(self.device)
 			addressee_label=addressee_label.to(self.device)
-			peaker_label=speaker_label.to(self.device)
-			addressee_label=addressee_label.to(self.device)
 			length=length.to(self.device)
 			
 			self.origin = origin
@@ -214,8 +201,7 @@ class decode_model(persona):
 		for i in range(self.source_size):
 			if self.params.response_only:
 				print_string=self.id2word(completed_history[i].cpu().numpy())
-				with open(decode_output,"a") as file:
-					file.write(print_string+"\n")
+				print(print_string)
 			else:
 				### If the data contains words, not numbers:
 				# print_string = origin
@@ -224,5 +210,4 @@ class decode_model(persona):
 				if self.params.SpeakerMode or self.params.AddresseeMode:
 					print_string += self.speakerVoc_decode[self.params.AddresseeId-1] + ": "
 				print_string += self.id2word(completed_history[i].cpu().numpy())
-				with open(decode_output,"a") as file:
-					file.write(print_string+"\n")
+				print(print_string)
