@@ -20,18 +20,21 @@ class data:
 		self.padding = 0  # Not used, just a reminder
 		self.UNK = params.UNK+params.special_word		#sel.UNK = 3
 		
-	def encode(self, tokens):
+	def encode(self, tokens, batch_size = 2, mode = "train"):
 		ids = []
 		for token in tokens:
-		### For raw-word data:
-		# 	try:
-		# 		ids.append(self.voc[token]+self.params.special_word)
-		# 	except KeyError:
-		# 		ids.append(self.UNK)
-		###--------------------
-		### For data that is already tokenized and transferred to ids:
+			if mode == "decode" and batch_size == 1:
+				### For raw-word data:
+				try:
+					ids.append(self.voc[token]+self.params.special_word)
+				except KeyError:
+					ids.append(self.UNK)
+				###--------------------
+			
+			### For data that is already tokenized and transferred to ids:
 			# ids.append(int(token)+self.params.special_word)
-		### For testing data (numbering starts from 1, not 0):
+			
+			### For testing data (numbering starts from 1, not 0):
 			ids.append(int(token)-1+self.params.special_word)
 		return ids
 
@@ -70,8 +73,8 @@ class data:
 				source=self.encode(s[1:])	#encoding speech of the speaker
 				target=[self.EOS]+self.encode(t[1:])+[self.EOT]		#encoding speech of the addressee
 			else:
-				source=self.encode(s[0:])	#encoding speech of the speaker
-				target=[self.EOS]+self.encode(t[0:])+[self.EOT]		#encoding speech of the addressee
+				source=self.encode(s[0:], self.params.batch_size, mode)	#encoding speech of the speaker
+				target=[self.EOS]+self.encode(t[0:], self.params.batch_size, mode)+[self.EOT]		#encoding speech of the addressee
 			
 			l_s=len(source)	#length of Source
 			l_t=len(target)	#length of Target
