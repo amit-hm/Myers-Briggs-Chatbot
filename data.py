@@ -24,18 +24,19 @@ class data:
 		ids = []
 		for token in tokens:
 			if mode == "decode" and batch_size == 1:
+				print("Yes")
 				### For raw-word data:
 				try:
 					ids.append(self.voc[token]+self.params.special_word)
 				except KeyError:
 					ids.append(self.UNK)
 				###--------------------
+			else:
+				### For testing data (numbering starts from 1, not 0):
+				ids.append(int(token)-1+self.params.special_word)
 			
 			### For data that is already tokenized and transferred to ids:
 			# ids.append(int(token)+self.params.special_word)
-			
-			### For testing data (numbering starts from 1, not 0):
-			ids.append(int(token)-1+self.params.special_word)
 		return ids
 
 	def read_batch(self, file, num, mode='train_or_test'):
