@@ -97,7 +97,7 @@ class lstm_decoder(lstm):
 
 		return beamHistory[torch.arange(beamHistory.size(0)),predicted_path,:]
 
-class decode_model(persona):
+class decode_model_2(persona):
 
 	def __init__(self, params):
 		with open(path.join(params.model_folder,params.params_name), 'rb') as file:	#save/testing/params
