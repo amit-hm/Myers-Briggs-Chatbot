@@ -198,8 +198,8 @@ class decode_model(persona):
 			targets=targets.to(self.device)
 			speaker_label=speaker_label.to(self.device)
 			addressee_label=addressee_label.to(self.device)
-			peaker_label=speaker_label.to(self.device)
-			addressee_label=addressee_label.to(self.device)
+			"""peaker_label=speaker_label.to(self.device)
+			addressee_label=addressee_label.to(self.device)"""
 			length=length.to(self.device)
 			
 			self.origin = origin
