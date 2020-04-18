@@ -41,6 +41,7 @@ if __name__ == '__main__':
 	model = decode_model_2(args)
 	
 	line = input ("You: ")
+	AddresseeId = input("Addressee ID: ")
 	
-	model.decode(line)
+	model.decode(line,AddresseeId)
 	# model.test()
