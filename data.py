@@ -99,9 +99,11 @@ class data:
 			max_l_s=max(l_s_set)	#length of longest Source sentence in the batch
 			max_l_t=max(l_t_set)	#length of longest Target sentence in the batch
 		except ValueError:
+			print("flag1")
 			return END,None,None,None,None,None,None,None
 
 		if max_l_s == 0:
+			print("flag2")
 			return END,None,None,None,None,None,None,None
 		elif max_l_t == 2 and mode != 'decode':
 			return END,None,None,None,None,None,None,None
