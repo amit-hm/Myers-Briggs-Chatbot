@@ -42,9 +42,6 @@ if __name__ == '__main__':
 	
 	print("\nEnter 'end' to exit")
 	AddresseeId = input("Addressee ID: ")
-	while True:
-		line = input ("You: ")
-		if line == "end":
-			break
-		else:
-			model.decode(line,AddresseeId)	
+
+	line = input ("You: ")
+	model.decode(line,AddresseeId)	
