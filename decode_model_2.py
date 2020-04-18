@@ -196,6 +196,7 @@ class decode_model_2(persona):
 			if self.params.response_only:
 				print_string = ""
 				if self.params.SpeakerMode or self.params.AddresseeMode:
+					print("yes")
 					print_string += self.speakerVoc_decode[self.params.AddresseeId-1] + ": "
 				print_string=self.id2word(completed_history[i].cpu().numpy())
 				print(print_string)
