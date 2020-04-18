@@ -47,7 +47,7 @@ class data:
 		a=0
 		for i in range(self.params.batch_size):
 			if mode == "decode" and self.params.batch_size == 1:
-				line = file
+				line = file.strip().split("|")
 			else:
 				line = linecache.getline(file,num*self.params.batch_size+i+1).strip().split("|")
 			i-=a	#to adjust for skipped lines
