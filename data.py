@@ -61,14 +61,13 @@ class data:
 			s = line[-2].split()[:self.params.source_max_length]
 			t = line[-1].split()[:self.params.target_max_length]
 			
-			if self.params.batch_size != 1:
-				#skipping lines when Speaker or Addressee speech is empty
-				if s[1:]==[]:	#if only one word in Source (i.e Speaker ID)
-					a+=1
-					continue
-				elif t[1:]==[] and mode!='decode':	#if only one word in Target (i.e Addressee ID) AND mode!='decode'
-					a+=1
-					continue
+			#skipping lines when Speaker or Addressee speech is empty
+			if s[1:]==[]:	#if only one word in Source (i.e Speaker ID)
+				a+=1
+				continue
+			elif t[1:]==[] and mode!='decode':	#if only one word in Target (i.e Addressee ID) AND mode!='decode'
+				a+=1
+				continue
 			
 			if self.params.SpeakerMode or self.params.AddresseeMode:
 				source=self.encode(s[1:], self.params.batch_size, mode)	#encoding speech of the speaker
