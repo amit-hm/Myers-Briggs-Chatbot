@@ -165,36 +165,31 @@ class decode_model_2(persona):
 		line = line + "|How are you"
 		self.params.AddresseeId = int(AddresseeId)
 		
+		###
 		END=0
 		batch_n=0
 		n_decode_instance=0
-		while END==0:
-			END,sources,targets,speaker_label,addressee_label,length,token_num,origin = self.Data.read_batch(line,batch_n,self.mode)
-			batch_n+=1
-			if END!=0:
-				break
-			n_decode_instance += sources.size(0)
-			
-			if self.params.max_decoding_number != 0 and n_decode_instance >= self.params.max_decoding_number:
-				break
-			if sources is None:
-				continue
-				
-			speaker_label.fill_(self.params.SpeakerId-1)
-			addressee_label.fill_(self.params.AddresseeId-1)
-			
-			sources=sources.to(self.device)
-			targets=targets.to(self.device)
-			speaker_label=speaker_label.to(self.device)
-			addressee_label=addressee_label.to(self.device)
-			length=length.to(self.device)
-			
-			self.origin = origin
-			self.source_size = sources.size(0)
-			self.Model.eval()	#eval mode
-			with torch.no_grad():
-				completed_history = self.Model(sources,targets,length,speaker_label,addressee_label,self.mode)
-			self.OutPut(completed_history)
+		END,sources,targets,speaker_label,addressee_label,length,token_num,origin = self.Data.read_batch(line,batch_n,self.mode)
+		batch_n+=1
+		if END!=0:
+			print("End not zero")
+		n_decode_instance += sources.size(0)
+
+		speaker_label.fill_(self.params.SpeakerId-1)
+		addressee_label.fill_(self.params.AddresseeId-1)
+
+		sources=sources.to(self.device)
+		targets=targets.to(self.device)
+		speaker_label=speaker_label.to(self.device)
+		addressee_label=addressee_label.to(self.device)
+		length=length.to(self.device)
+
+		self.origin = origin
+		self.source_size = sources.size(0)
+		self.Model.eval()	#eval mode
+		with torch.no_grad():
+			completed_history = self.Model(sources,targets,length,speaker_label,addressee_label,self.mode)
+		self.OutPut(completed_history)
 		print("decoding done")
 
 	def OutPut(self,completed_history):
