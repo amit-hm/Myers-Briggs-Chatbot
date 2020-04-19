@@ -40,7 +40,7 @@ print()
 if __name__ == '__main__':
 	model = decode_model_2(args)
 	
-	AddresseeId = input("1: Introversion| 2: Extroversion| 3: Sensing| 4: Intuition| 5: Feeling| 6: Thinking| 7: Perceiving| 8: Judging\nChoose one of the option: ")
+	AddresseeId = input("1: Introversion| 2: Extroversion| 3: Sensing| 4: Intuition| 5: Feeling| 6: Thinking| 7: Perceiving| 8: Judging\nChoose one of the options: ")
 	print("\nEnter 'end' to exit")
 	while True:
 		line = input ("You: ")
