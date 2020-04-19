@@ -71,6 +71,7 @@ class lstm_target(nn.Module):
 		super(lstm_target, self).__init__()
 		
 		dim = params.dimension	#512
+		speaker_dim = params.speakerDimension
 		layer = params.layers	#4
 		self.dropout = nn.Dropout(p=params.dropout)	#0.2
 		self.speaker = params.SpeakerMode	#default False
@@ -78,8 +79,8 @@ class lstm_target(nn.Module):
 		persona_num = params.PersonaNum		#2
 		
 		if self.speaker:
-			self.persona_embedding=nn.Embedding(persona_num,dim)
-			self.lstmt=nn.LSTM(dim*3,dim,num_layers=layer,batch_first=True,bias=False,dropout=params.dropout)
+			self.persona_embedding=nn.Embedding(persona_num,speaker_dim)
+			self.lstmt=nn.LSTM(dim*2+speaker_dim,dim,num_layers=layer,batch_first=True,bias=False,dropout=params.dropout)
 		elif self.addressee:
 			self.persona_embedding=nn.Embedding(persona_num,dim)
 			self.speaker_linear = nn.Linear(dim,dim)
