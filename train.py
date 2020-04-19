@@ -33,6 +33,7 @@ parser.add_argument("--target_max_length", type=int, default=50)
 parser.add_argument("--max_iter", type=int, default=10)
 
 parser.add_argument("--dimension", type=int, default=512)
+parser.add_argument("--speakerDimension", type=int, default=8)
 parser.add_argument("--layers", type=int, default=4)
 parser.add_argument("--init_weight", type=float, default=0.1)
 
