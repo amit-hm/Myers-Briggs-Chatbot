@@ -46,7 +46,7 @@ if __name__ == '__main__':
 	while True:
 		line = input ("You: ")
 		if line != "end":
-			if if model.params.SpeakerMode:
+			if model.params.SpeakerMode:
 				model.decode(line,AddresseeId)
 			else:
 				model.decode(line)
