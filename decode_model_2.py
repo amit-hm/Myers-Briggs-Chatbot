@@ -197,6 +197,8 @@ class decode_model_2(persona):
 				print_string = ""
 				if self.params.SpeakerMode or self.params.AddresseeMode:
 					print_string += "Myers-Briggs Bot (" + self.speakerVoc_decode[self.params.AddresseeId-1] + "): "
+				else:
+					print_string += "Bot: "
 				print_string += self.id2word(completed_history[i].cpu().numpy())
 				print(print_string)
 			else:
