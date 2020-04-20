@@ -159,11 +159,12 @@ class decode_model_2(persona):
 				break
 		return " ".join(tokens)
 
-	def decode(self, line, AddresseeId):
+	def decode(self, line, AddresseeId = None):
 		self.mode="decode"
 		self.params.batch_size = 1
 		line = "1 " + line + "|How are you"
-		self.params.AddresseeId = int(AddresseeId)
+		if self.params.SpeakerMode:
+			self.params.AddresseeId = int(AddresseeId)
 		
 		###
 		END=0
