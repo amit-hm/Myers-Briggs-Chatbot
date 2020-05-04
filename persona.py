@@ -247,7 +247,7 @@ class persona:
 			pickle.dump(self.params,file)
 
 	def readModel(self,save_folder,model_name,re_random_weights=None):
-		target_model = torch.load(path.join(save_folder,model_name))	#save/testing/model
+		target_model = torch.load(path.join(save_folder,model_name),map_location=torch.device('cpu'))	#save/testing/model
 		
 		if re_random_weights is not None:
 			for weight_name in re_random_weights:
