@@ -100,6 +100,10 @@ class lstm_decoder(lstm):
 class decode_model_2(persona):
 
 	def __init__(self, params):
+		self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+		if self.params.cpu:
+			self.device="cpu"
+		
 		with open(path.join(params.model_folder,params.params_name), 'rb') as file:	#save/testing/params
 			adapted_params = pickle.load(file)
 		for key in vars(params):
@@ -117,9 +121,7 @@ class decode_model_2(persona):
 		self.ReadDict()
 		self.Data=data(self.params,self.voc)
 
-		self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-		if self.params.cpu:
-			self.device="cpu"
+
 
 		self.Model = lstm_decoder(self.params,len(self.voc),self.Data.EOT)
 		self.readModel(self.params.model_folder,self.params.model_name)		#save/testing/model
