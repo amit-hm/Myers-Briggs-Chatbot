@@ -149,13 +149,21 @@ class decode_model_2(persona):
 	def id2word(self, ids):
 		### For raw-word data:
 		# self.voc_decode[len(self.voc_decode)] = '[unknown]'
+		j = 0
+		punc_list = [',','?','.','!',"'s","'t","...","-","'ll","'m","'re","'ve",":","'","]","[","}","{",";"]
 		tokens = []
 		for i in ids:
 			try:
 				word = self.voc_decode[int(i)-self.params.special_word]
-				tokens.append(word)
+				if word in punc_list:
+					tokens.append(word)
+				else:
+					if j != 0:
+						word = " " + word					
+					tokens.append(word)
 			except KeyError:
 				break
+			j = j + 1
 		return " ".join(tokens)
 
 	def decode(self, line, addressee_embed = None):
